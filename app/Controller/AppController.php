@@ -30,21 +30,5 @@ App::uses('Controller', 'Controller');
  * @link		http://book.cakephp.org/2.0/en/controllers.html#the-app-controller
  */
 class AppController extends Controller {
-//    public $name = 'AuthApp';
-    public $components = array('Auth', 'Session');
-    public $is_logged_in = false;
-    public $current_user_id = 0;
-
-    function beforeFilter() {
-        parent::beforeFilter();
-
-        if ($this->current_user_id = $this->Auth->user('id')) {
-            $this->is_logged_in = true;
-        }
-        $this->set('is_logged_in', $this->is_logged_in);
-        $this->set('current_current_user_id', $this->current_user_id);
-
-        $this->Auth->allow('*');
-    }
 
 }

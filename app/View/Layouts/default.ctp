@@ -42,27 +42,6 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		<div id="header">
 			<h1><?php echo $this->Html->link($cakeDescription, 'http://cakephp.org'); ?></h1>
 		</div>
-<div style="background-color: #ccc; padding: 1em;">
-<?php
-        if ($this->Session->read('Auth.User.id')) {
-            printf("%s(%s) %s", $this->Session->read('Auth.User.username'),
-                                $this->Session->read('Auth.User.email'),
-                                $this->Html->link('Logout', '/logout'));
-        } else {
-            echo $this->Html->link('Login', '/login');
-        }
-?>
-|
-<?php
-    $menu_items = array();
-    $menu_items[] = $this->Html->link('Public Letters', array('controller' => 'letter', 'action' => 'index'));
-    $menu_items[] = $this->Html->link('My Letter', array('controller' => 'letter', 'action' => 'index', '?' => array('user_id' => $this->Session->read('Auth.User.id'))));
-    $menu_items[] = $this->Html->link('Create Letter', array('controller' => 'my_letter', 'action' => 'create'));
-    $menu_items[] = $this->Html->link('Service Status', array('controller' => 'service', 'action' => 'status'));
-    echo join(' | ', $menu_items);
-?>
-
-</div>
 		<div id="content">
 
 			<?php echo $this->Session->flash(); ?>
