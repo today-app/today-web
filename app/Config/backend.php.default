@@ -1,4 +1,14 @@
 <?php
-$config['Backend']['hostname'] = '127.0.0.1';
-$config['Backend']['port'] = 9091;
+$config = array(
+    'Backend' => array(
+        'default' => array(
+            'hostname' => '127.0.0.1',
+            'port' => 9090
+        ),
+        'test' => array(
+            'hostname' => '127.0.0.1',
+            'port' => 9091
+        )
+    )
+);
 ?>

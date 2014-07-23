@@ -24,6 +24,7 @@ class TodayApiTest extends CakeTestCase {
     public function setUp() {
         parent::setUp();
         $this->TodayApi = ClassRegistry::init('TodayApi');
+        $this->TodayApi->connection = 'test';
         $this->faker = Faker\Factory::create();
 
         $this->TodayApi->system_reset_fixtures();

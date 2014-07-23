@@ -21,6 +21,7 @@ class TodayApi extends AppModel {
 
     public $client = null;
     public $useTable = false;
+    public $connection = 'default';
 
     private function __initThrift() {
         $backend = Configure::read('Backend');
@@ -30,7 +31,7 @@ class TodayApi extends AppModel {
         }
 
         try {
-            $socket = new TSocket($backend['hostname'], $backend['port']);
+            $socket = new TSocket($backend[$this->connection]['hostname'], $backend[$this->connection]['port']);
             $socket->setRecvTimeout(10000);
             $this->transport = new TFramedTransport($socket, 1024, 1024);
             $this->protocol = new TBinaryProtocol($this->transport);
