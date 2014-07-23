@@ -1,0 +1,4 @@
+<?php
+$config['Backend']['hostname'] = '127.0.0.1';
+$config['Backend']['port'] = 9091;
+?>
