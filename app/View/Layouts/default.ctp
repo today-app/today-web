@@ -42,6 +42,9 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		<div id="header">
 			<h1><?php echo $this->Html->link($cakeDescription, 'http://cakephp.org'); ?></h1>
 		</div>
+<div style="background-color: #ccc; padding: 0.5em;">
+<?= $this->Html->link('Posts', '/posts/index') ?>
+</div>
 		<div id="content">
 
 			<?php echo $this->Session->flash(); ?>
