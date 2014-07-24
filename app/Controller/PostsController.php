@@ -22,5 +22,15 @@ class PostsController extends AppController {
         }
     }
 
+    public function view($id = null) {
+        if (empty($id)) {
+            $this->setFlash('Error: invalid post_id', '/');
+            $this->redirect('/');
+        }
+
+        $post = $this->TodayApi->post_get(1, $id);
+        $this->set('post', $post);
+    }
+
 }
 

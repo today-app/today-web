@@ -2,7 +2,7 @@
 <h2>Posts</h2>
 <ul>
 <?php foreach($posts as $post): ?>
-<li><?= $post->text ?></li>
+<li>[<?= $post->id ?>] <?= $this->Html->link($post->text, sprintf('/posts/view/%d', $post->id)) ?></li>
 <?php endforeach; ?>
 </ul>
 </div>
