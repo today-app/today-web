@@ -32,5 +32,19 @@ class PostsController extends AppController {
         $this->set('post', $post);
     }
 
+    public function comment_add() {
+        if (!empty($this->request->data)) {
+            $text = $this->request->data['Comment']['text'];
+            $post_id = $this->request->data['Comment']['post_id'];
+            $result = $this->TodayApi->post_comment_create(1, $text);
+            if ($result) {
+                $this->Session->setFlash('Comment added.');
+                $this->redirect(array('action' => 'view', $post_id));
+            } else {
+                $this->Session->setFlash('Some error has occurred!');
+            }
+        }
+    }
+
 }
 
