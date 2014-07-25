@@ -32,5 +32,12 @@ class PostsController extends AppController {
         $this->set('post', $post);
     }
 
+    public function comment_create() {
+        $this->autoRender = false;
+        pr(' === ');
+        pr( $this->TodayApi->post_comment_create(1, 3, 'hello') );
+        pr(' === ');
+    }
+
 }
 
