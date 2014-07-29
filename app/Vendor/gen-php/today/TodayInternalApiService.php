@@ -21,7 +21,7 @@ interface TodayInternalApiServiceIf {
   public function post_get($user_id, $post_id);
   public function post_list($user_id);
   public function post_delete($user_id, $post_id);
-  public function post_comment_create($user_id, $post_id);
+  public function post_comment_create($user_id, $post_id, $text);
   public function post_comment_list($user_id, $post_id);
   public function post_comment_delete($user_id, $post_id, $comment_id);
   public function system_reset_fixtures();
@@ -245,17 +245,18 @@ class TodayInternalApiServiceClient implements \today\TodayInternalApiServiceIf 
     throw new \Exception("post_delete failed: unknown result");
   }
 
-  public function post_comment_create($user_id, $post_id)
+  public function post_comment_create($user_id, $post_id, $text)
   {
-    $this->send_post_comment_create($user_id, $post_id);
+    $this->send_post_comment_create($user_id, $post_id, $text);
     return $this->recv_post_comment_create();
   }
 
-  public function send_post_comment_create($user_id, $post_id)
+  public function send_post_comment_create($user_id, $post_id, $text)
   {
     $args = new \today\TodayInternalApiService_post_comment_create_args();
     $args->user_id = $user_id;
     $args->post_id = $post_id;
+    $args->text = $text;
     $bin_accel = ($this->output_ instanceof TBinaryProtocolAccelerated) && function_exists('thrift_protocol_write_binary');
     if ($bin_accel)
     {
@@ -1130,6 +1131,7 @@ class TodayInternalApiService_post_comment_create_args {
 
   public $user_id = null;
   public $post_id = null;
+  public $text = null;
 
   public function __construct($vals=null) {
     if (!isset(self::$_TSPEC)) {
@@ -1142,6 +1144,10 @@ class TodayInternalApiService_post_comment_create_args {
           'var' => 'post_id',
           'type' => TType::I32,
           ),
+        3 => array(
+          'var' => 'text',
+          'type' => TType::STRING,
+          ),
         );
     }
     if (is_array($vals)) {
@@ -1150,6 +1156,9 @@ class TodayInternalApiService_post_comment_create_args {
       }
       if (isset($vals['post_id'])) {
         $this->post_id = $vals['post_id'];
+      }
+      if (isset($vals['text'])) {
+        $this->text = $vals['text'];
       }
     }
   }
@@ -1187,6 +1196,13 @@ class TodayInternalApiService_post_comment_create_args {
             $xfer += $input->skip($ftype);
           }
           break;
+        case 3:
+          if ($ftype == TType::STRING) {
+            $xfer += $input->readString($this->text);
+          } else {
+            $xfer += $input->skip($ftype);
+          }
+          break;
         default:
           $xfer += $input->skip($ftype);
           break;
@@ -1210,6 +1226,11 @@ class TodayInternalApiService_post_comment_create_args {
       $xfer += $output->writeI32($this->post_id);
       $xfer += $output->writeFieldEnd();
     }
+    if ($this->text !== null) {
+      $xfer += $output->writeFieldBegin('text', TType::STRING, 3);
+      $xfer += $output->writeString($this->text);
+      $xfer += $output->writeFieldEnd();
+    }
     $xfer += $output->writeFieldStop();
     $xfer += $output->writeStructEnd();
     return $xfer;
@@ -1227,7 +1248,7 @@ class TodayInternalApiService_post_comment_create_result {
       self::$_TSPEC = array(
         0 => array(
           'var' => 'success',
-          'type' => TType::I32,
+          'type' => TType::BOOL,
           ),
         );
     }
@@ -1258,8 +1279,8 @@ class TodayInternalApiService_post_comment_create_result {
       switch ($fid)
       {
         case 0:
-          if ($ftype == TType::I32) {
-            $xfer += $input->readI32($this->success);
+          if ($ftype == TType::BOOL) {
+            $xfer += $input->readBool($this->success);
           } else {
             $xfer += $input->skip($ftype);
           }
@@ -1278,8 +1299,8 @@ class TodayInternalApiService_post_comment_create_result {
     $xfer = 0;
     $xfer += $output->writeStructBegin('TodayInternalApiService_post_comment_create_result');
     if ($this->success !== null) {
-      $xfer += $output->writeFieldBegin('success', TType::I32, 0);
-      $xfer += $output->writeI32($this->success);
+      $xfer += $output->writeFieldBegin('success', TType::BOOL, 0);
+      $xfer += $output->writeBool($this->success);
       $xfer += $output->writeFieldEnd();
     }
     $xfer += $output->writeFieldStop();

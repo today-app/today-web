@@ -9,15 +9,16 @@ struct User {
     2: string username
 }
 
+struct Comment {
+    1: int id
+    2: int user_id
+    3: string text
+}
+
 struct Post {
     1: int id
     2: string text
     3: User user
-}
-
-struct Comment {
-    1: int id
-    2: string text
 }
 
 service TodayInternalApiService
@@ -30,7 +31,7 @@ service TodayInternalApiService
 
     bool post_delete(1: int user_id, 2: int post_id),
 
-    int post_comment_create(1: int user_id, 2: int post_id),
+    bool post_comment_create(1: int user_id, 2: int post_id, 3: string text),
 
     list <Comment> post_comment_list(1: int user_id, 2: int post_id),
 

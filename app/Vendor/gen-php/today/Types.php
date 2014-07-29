@@ -109,6 +109,118 @@ class User {
 
 }
 
+class Comment {
+  static $_TSPEC;
+
+  public $id = null;
+  public $user_id = null;
+  public $text = null;
+
+  public function __construct($vals=null) {
+    if (!isset(self::$_TSPEC)) {
+      self::$_TSPEC = array(
+        1 => array(
+          'var' => 'id',
+          'type' => TType::I32,
+          ),
+        2 => array(
+          'var' => 'user_id',
+          'type' => TType::I32,
+          ),
+        3 => array(
+          'var' => 'text',
+          'type' => TType::STRING,
+          ),
+        );
+    }
+    if (is_array($vals)) {
+      if (isset($vals['id'])) {
+        $this->id = $vals['id'];
+      }
+      if (isset($vals['user_id'])) {
+        $this->user_id = $vals['user_id'];
+      }
+      if (isset($vals['text'])) {
+        $this->text = $vals['text'];
+      }
+    }
+  }
+
+  public function getName() {
+    return 'Comment';
+  }
+
+  public function read($input)
+  {
+    $xfer = 0;
+    $fname = null;
+    $ftype = 0;
+    $fid = 0;
+    $xfer += $input->readStructBegin($fname);
+    while (true)
+    {
+      $xfer += $input->readFieldBegin($fname, $ftype, $fid);
+      if ($ftype == TType::STOP) {
+        break;
+      }
+      switch ($fid)
+      {
+        case 1:
+          if ($ftype == TType::I32) {
+            $xfer += $input->readI32($this->id);
+          } else {
+            $xfer += $input->skip($ftype);
+          }
+          break;
+        case 2:
+          if ($ftype == TType::I32) {
+            $xfer += $input->readI32($this->user_id);
+          } else {
+            $xfer += $input->skip($ftype);
+          }
+          break;
+        case 3:
+          if ($ftype == TType::STRING) {
+            $xfer += $input->readString($this->text);
+          } else {
+            $xfer += $input->skip($ftype);
+          }
+          break;
+        default:
+          $xfer += $input->skip($ftype);
+          break;
+      }
+      $xfer += $input->readFieldEnd();
+    }
+    $xfer += $input->readStructEnd();
+    return $xfer;
+  }
+
+  public function write($output) {
+    $xfer = 0;
+    $xfer += $output->writeStructBegin('Comment');
+    if ($this->id !== null) {
+      $xfer += $output->writeFieldBegin('id', TType::I32, 1);
+      $xfer += $output->writeI32($this->id);
+      $xfer += $output->writeFieldEnd();
+    }
+    if ($this->user_id !== null) {
+      $xfer += $output->writeFieldBegin('user_id', TType::I32, 2);
+      $xfer += $output->writeI32($this->user_id);
+      $xfer += $output->writeFieldEnd();
+    }
+    if ($this->text !== null) {
+      $xfer += $output->writeFieldBegin('text', TType::STRING, 3);
+      $xfer += $output->writeString($this->text);
+      $xfer += $output->writeFieldEnd();
+    }
+    $xfer += $output->writeFieldStop();
+    $xfer += $output->writeStructEnd();
+    return $xfer;
+  }
+
+}
+
 class Post {
   static $_TSPEC;
 
@@ -217,98 +329,6 @@ class Post {
       }
       $xfer += $output->writeFieldBegin('user', TType::STRUCT, 3);
       $xfer += $this->user->write($output);
-      $xfer += $output->writeFieldEnd();
-    }
-    $xfer += $output->writeFieldStop();
-    $xfer += $output->writeStructEnd();
-    return $xfer;
-  }
-
-}
-
-class Comment {
-  static $_TSPEC;
-
-  public $id = null;
-  public $text = null;
-
-  public function __construct($vals=null) {
-    if (!isset(self::$_TSPEC)) {
-      self::$_TSPEC = array(
-        1 => array(
-          'var' => 'id',
-          'type' => TType::I32,
-          ),
-        2 => array(
-          'var' => 'text',
-          'type' => TType::STRING,
-          ),
-        );
-    }
-    if (is_array($vals)) {
-      if (isset($vals['id'])) {
-        $this->id = $vals['id'];
-      }
-      if (isset($vals['text'])) {
-        $this->text = $vals['text'];
-      }
-    }
-  }
-
-  public function getName() {
-    return 'Comment';
-  }
-
-  public function read($input)
-  {
-    $xfer = 0;
-    $fname = null;
-    $ftype = 0;
-    $fid = 0;
-    $xfer += $input->readStructBegin($fname);
-    while (true)
-    {
-      $xfer += $input->readFieldBegin($fname, $ftype, $fid);
-      if ($ftype == TType::STOP) {
-        break;
-      }
-      switch ($fid)
-      {
-        case 1:
-          if ($ftype == TType::I32) {
-            $xfer += $input->readI32($this->id);
-          } else {
-            $xfer += $input->skip($ftype);
-          }
-          break;
-        case 2:
-          if ($ftype == TType::STRING) {
-            $xfer += $input->readString($this->text);
-          } else {
-            $xfer += $input->skip($ftype);
-          }
-          break;
-        default:
-          $xfer += $input->skip($ftype);
-          break;
-      }
-      $xfer += $input->readFieldEnd();
-    }
-    $xfer += $input->readStructEnd();
-    return $xfer;
-  }
-
-  public function write($output) {
-    $xfer = 0;
-    $xfer += $output->writeStructBegin('Comment');
-    if ($this->id !== null) {
-      $xfer += $output->writeFieldBegin('id', TType::I32, 1);
-      $xfer += $output->writeI32($this->id);
-      $xfer += $output->writeFieldEnd();
-    }
-    if ($this->text !== null) {
-      $xfer += $output->writeFieldBegin('text', TType::STRING, 2);
-      $xfer += $output->writeString($this->text);
       $xfer += $output->writeFieldEnd();
     }
     $xfer += $output->writeFieldStop();
