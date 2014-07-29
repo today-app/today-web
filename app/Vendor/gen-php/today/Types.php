@@ -113,8 +113,8 @@ class Comment {
   static $_TSPEC;
 
   public $id = null;
+  public $user_id = null;
   public $text = null;
-  public $user = null;
 
   public function __construct($vals=null) {
     if (!isset(self::$_TSPEC)) {
@@ -124,13 +124,12 @@ class Comment {
           'type' => TType::I32,
           ),
         2 => array(
-          'var' => 'text',
-          'type' => TType::STRING,
+          'var' => 'user_id',
+          'type' => TType::I32,
           ),
         3 => array(
-          'var' => 'user',
-          'type' => TType::STRUCT,
-          'class' => '\today\User',
+          'var' => 'text',
+          'type' => TType::STRING,
           ),
         );
     }
@@ -138,11 +137,11 @@ class Comment {
       if (isset($vals['id'])) {
         $this->id = $vals['id'];
       }
+      if (isset($vals['user_id'])) {
+        $this->user_id = $vals['user_id'];
+      }
       if (isset($vals['text'])) {
         $this->text = $vals['text'];
-      }
-      if (isset($vals['user'])) {
-        $this->user = $vals['user'];
       }
     }
   }
@@ -174,16 +173,15 @@ class Comment {
           }
           break;
         case 2:
-          if ($ftype == TType::STRING) {
-            $xfer += $input->readString($this->text);
+          if ($ftype == TType::I32) {
+            $xfer += $input->readI32($this->user_id);
           } else {
             $xfer += $input->skip($ftype);
           }
           break;
         case 3:
-          if ($ftype == TType::STRUCT) {
-            $this->user = new \today\User();
-            $xfer += $this->user->read($input);
+          if ($ftype == TType::STRING) {
+            $xfer += $input->readString($this->text);
           } else {
             $xfer += $input->skip($ftype);
           }
@@ -206,17 +204,14 @@ class Comment {
       $xfer += $output->writeI32($this->id);
       $xfer += $output->writeFieldEnd();
     }
-    if ($this->text !== null) {
-      $xfer += $output->writeFieldBegin('text', TType::STRING, 2);
-      $xfer += $output->writeString($this->text);
+    if ($this->user_id !== null) {
+      $xfer += $output->writeFieldBegin('user_id', TType::I32, 2);
+      $xfer += $output->writeI32($this->user_id);
       $xfer += $output->writeFieldEnd();
     }
-    if ($this->user !== null) {
-      if (!is_object($this->user)) {
-        throw new TProtocolException('Bad type in structure.', TProtocolException::INVALID_DATA);
-      }
-      $xfer += $output->writeFieldBegin('user', TType::STRUCT, 3);
-      $xfer += $this->user->write($output);
+    if ($this->text !== null) {
+      $xfer += $output->writeFieldBegin('text', TType::STRING, 3);
+      $xfer += $output->writeString($this->text);
       $xfer += $output->writeFieldEnd();
     }
     $xfer += $output->writeFieldStop();
@@ -232,7 +227,6 @@ class Post {
   public $id = null;
   public $text = null;
   public $user = null;
-  public $comments = null;
 
   public function __construct($vals=null) {
     if (!isset(self::$_TSPEC)) {
@@ -250,15 +244,6 @@ class Post {
           'type' => TType::STRUCT,
           'class' => '\today\User',
           ),
-        4 => array(
-          'var' => 'comments',
-          'type' => TType::LST,
-          'etype' => TType::STRUCT,
-          'elem' => array(
-            'type' => TType::STRUCT,
-            'class' => '\today\Comment',
-            ),
-          ),
         );
     }
     if (is_array($vals)) {
@@ -270,9 +255,6 @@ class Post {
       }
       if (isset($vals['user'])) {
         $this->user = $vals['user'];
-      }
-      if (isset($vals['comments'])) {
-        $this->comments = $vals['comments'];
       }
     }
   }
@@ -318,24 +300,6 @@ class Post {
             $xfer += $input->skip($ftype);
           }
           break;
-        case 4:
-          if ($ftype == TType::LST) {
-            $this->comments = array();
-            $_size0 = 0;
-            $_etype3 = 0;
-            $xfer += $input->readListBegin($_etype3, $_size0);
-            for ($_i4 = 0; $_i4 < $_size0; ++$_i4)
-            {
-              $elem5 = null;
-              $elem5 = new \today\Comment();
-              $xfer += $elem5->read($input);
-              $this->comments []= $elem5;
-            }
-            $xfer += $input->readListEnd();
-          } else {
-            $xfer += $input->skip($ftype);
-          }
-          break;
         default:
           $xfer += $input->skip($ftype);
           break;
@@ -365,23 +329,6 @@ class Post {
       }
       $xfer += $output->writeFieldBegin('user', TType::STRUCT, 3);
       $xfer += $this->user->write($output);
-      $xfer += $output->writeFieldEnd();
-    }
-    if ($this->comments !== null) {
-      if (!is_array($this->comments)) {
-        throw new TProtocolException('Bad type in structure.', TProtocolException::INVALID_DATA);
-      }
-      $xfer += $output->writeFieldBegin('comments', TType::LST, 4);
-      {
-        $output->writeListBegin(TType::STRUCT, count($this->comments));
-        {
-          foreach ($this->comments as $iter6)
-          {
-            $xfer += $iter6->write($output);
-          }
-        }
-        $output->writeListEnd();
-      }
       $xfer += $output->writeFieldEnd();
     }
     $xfer += $output->writeFieldStop();

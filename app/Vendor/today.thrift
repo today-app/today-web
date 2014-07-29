@@ -11,15 +11,14 @@ struct User {
 
 struct Comment {
     1: int id
-    2: string text
-    3: User user
+    2: int user_id
+    3: string text
 }
 
 struct Post {
     1: int id
     2: string text
     3: User user
-    4: list <Comment> comments
 }
 
 service TodayInternalApiService

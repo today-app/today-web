@@ -910,15 +910,15 @@ class TodayInternalApiService_post_list_result {
         case 0:
           if ($ftype == TType::LST) {
             $this->success = array();
-            $_size7 = 0;
-            $_etype10 = 0;
-            $xfer += $input->readListBegin($_etype10, $_size7);
-            for ($_i11 = 0; $_i11 < $_size7; ++$_i11)
+            $_size0 = 0;
+            $_etype3 = 0;
+            $xfer += $input->readListBegin($_etype3, $_size0);
+            for ($_i4 = 0; $_i4 < $_size0; ++$_i4)
             {
-              $elem12 = null;
-              $elem12 = new \today\Post();
-              $xfer += $elem12->read($input);
-              $this->success []= $elem12;
+              $elem5 = null;
+              $elem5 = new \today\Post();
+              $xfer += $elem5->read($input);
+              $this->success []= $elem5;
             }
             $xfer += $input->readListEnd();
           } else {
@@ -946,9 +946,9 @@ class TodayInternalApiService_post_list_result {
       {
         $output->writeListBegin(TType::STRUCT, count($this->success));
         {
-          foreach ($this->success as $iter13)
+          foreach ($this->success as $iter6)
           {
-            $xfer += $iter13->write($output);
+            $xfer += $iter6->write($output);
           }
         }
         $output->writeListEnd();
@@ -1450,15 +1450,15 @@ class TodayInternalApiService_post_comment_list_result {
         case 0:
           if ($ftype == TType::LST) {
             $this->success = array();
-            $_size14 = 0;
-            $_etype17 = 0;
-            $xfer += $input->readListBegin($_etype17, $_size14);
-            for ($_i18 = 0; $_i18 < $_size14; ++$_i18)
+            $_size7 = 0;
+            $_etype10 = 0;
+            $xfer += $input->readListBegin($_etype10, $_size7);
+            for ($_i11 = 0; $_i11 < $_size7; ++$_i11)
             {
-              $elem19 = null;
-              $elem19 = new \today\Comment();
-              $xfer += $elem19->read($input);
-              $this->success []= $elem19;
+              $elem12 = null;
+              $elem12 = new \today\Comment();
+              $xfer += $elem12->read($input);
+              $this->success []= $elem12;
             }
             $xfer += $input->readListEnd();
           } else {
@@ -1486,9 +1486,9 @@ class TodayInternalApiService_post_comment_list_result {
       {
         $output->writeListBegin(TType::STRUCT, count($this->success));
         {
-          foreach ($this->success as $iter20)
+          foreach ($this->success as $iter13)
           {
-            $xfer += $iter20->write($output);
+            $xfer += $iter13->write($output);
           }
         }
         $output->writeListEnd();
