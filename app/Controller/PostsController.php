@@ -1,7 +1,11 @@
 <?php
-App::uses('AppController', 'Controller');
-
-class PostsController extends AppController {
+App::uses('AppAuthController', 'Controller');
+/**
+ * Users Controller
+ *
+ * @property User $User
+ */
+class PostsController extends AppAuthController {
 
     public $uses = array('TodayApi');
 
