@@ -113,7 +113,7 @@ class Comment {
   static $_TSPEC;
 
   public $id = null;
-  public $user_id = null;
+  public $user = null;
   public $text = null;
 
   public function __construct($vals=null) {
@@ -124,8 +124,9 @@ class Comment {
           'type' => TType::I32,
           ),
         2 => array(
-          'var' => 'user_id',
-          'type' => TType::I32,
+          'var' => 'user',
+          'type' => TType::STRUCT,
+          'class' => '\today\User',
           ),
         3 => array(
           'var' => 'text',
@@ -137,8 +138,8 @@ class Comment {
       if (isset($vals['id'])) {
         $this->id = $vals['id'];
       }
-      if (isset($vals['user_id'])) {
-        $this->user_id = $vals['user_id'];
+      if (isset($vals['user'])) {
+        $this->user = $vals['user'];
       }
       if (isset($vals['text'])) {
         $this->text = $vals['text'];
@@ -173,8 +174,9 @@ class Comment {
           }
           break;
         case 2:
-          if ($ftype == TType::I32) {
-            $xfer += $input->readI32($this->user_id);
+          if ($ftype == TType::STRUCT) {
+            $this->user = new \today\User();
+            $xfer += $this->user->read($input);
           } else {
             $xfer += $input->skip($ftype);
           }
@@ -204,9 +206,12 @@ class Comment {
       $xfer += $output->writeI32($this->id);
       $xfer += $output->writeFieldEnd();
     }
-    if ($this->user_id !== null) {
-      $xfer += $output->writeFieldBegin('user_id', TType::I32, 2);
-      $xfer += $output->writeI32($this->user_id);
+    if ($this->user !== null) {
+      if (!is_object($this->user)) {
+        throw new TProtocolException('Bad type in structure.', TProtocolException::INVALID_DATA);
+      }
+      $xfer += $output->writeFieldBegin('user', TType::STRUCT, 2);
+      $xfer += $this->user->write($output);
       $xfer += $output->writeFieldEnd();
     }
     if ($this->text !== null) {
@@ -329,6 +334,294 @@ class Post {
       }
       $xfer += $output->writeFieldBegin('user', TType::STRUCT, 3);
       $xfer += $this->user->write($output);
+      $xfer += $output->writeFieldEnd();
+    }
+    $xfer += $output->writeFieldStop();
+    $xfer += $output->writeStructEnd();
+    return $xfer;
+  }
+
+}
+
+class NotFoundError extends TException {
+  static $_TSPEC;
+
+  public $why = null;
+
+  public function __construct($vals=null) {
+    if (!isset(self::$_TSPEC)) {
+      self::$_TSPEC = array(
+        1 => array(
+          'var' => 'why',
+          'type' => TType::STRING,
+          ),
+        );
+    }
+    if (is_array($vals)) {
+      if (isset($vals['why'])) {
+        $this->why = $vals['why'];
+      }
+    }
+  }
+
+  public function getName() {
+    return 'NotFoundError';
+  }
+
+  public function read($input)
+  {
+    $xfer = 0;
+    $fname = null;
+    $ftype = 0;
+    $fid = 0;
+    $xfer += $input->readStructBegin($fname);
+    while (true)
+    {
+      $xfer += $input->readFieldBegin($fname, $ftype, $fid);
+      if ($ftype == TType::STOP) {
+        break;
+      }
+      switch ($fid)
+      {
+        case 1:
+          if ($ftype == TType::STRING) {
+            $xfer += $input->readString($this->why);
+          } else {
+            $xfer += $input->skip($ftype);
+          }
+          break;
+        default:
+          $xfer += $input->skip($ftype);
+          break;
+      }
+      $xfer += $input->readFieldEnd();
+    }
+    $xfer += $input->readStructEnd();
+    return $xfer;
+  }
+
+  public function write($output) {
+    $xfer = 0;
+    $xfer += $output->writeStructBegin('NotFoundError');
+    if ($this->why !== null) {
+      $xfer += $output->writeFieldBegin('why', TType::STRING, 1);
+      $xfer += $output->writeString($this->why);
+      $xfer += $output->writeFieldEnd();
+    }
+    $xfer += $output->writeFieldStop();
+    $xfer += $output->writeStructEnd();
+    return $xfer;
+  }
+
+}
+
+class AlreadyExistsError extends TException {
+  static $_TSPEC;
+
+  public $why = null;
+
+  public function __construct($vals=null) {
+    if (!isset(self::$_TSPEC)) {
+      self::$_TSPEC = array(
+        1 => array(
+          'var' => 'why',
+          'type' => TType::STRING,
+          ),
+        );
+    }
+    if (is_array($vals)) {
+      if (isset($vals['why'])) {
+        $this->why = $vals['why'];
+      }
+    }
+  }
+
+  public function getName() {
+    return 'AlreadyExistsError';
+  }
+
+  public function read($input)
+  {
+    $xfer = 0;
+    $fname = null;
+    $ftype = 0;
+    $fid = 0;
+    $xfer += $input->readStructBegin($fname);
+    while (true)
+    {
+      $xfer += $input->readFieldBegin($fname, $ftype, $fid);
+      if ($ftype == TType::STOP) {
+        break;
+      }
+      switch ($fid)
+      {
+        case 1:
+          if ($ftype == TType::STRING) {
+            $xfer += $input->readString($this->why);
+          } else {
+            $xfer += $input->skip($ftype);
+          }
+          break;
+        default:
+          $xfer += $input->skip($ftype);
+          break;
+      }
+      $xfer += $input->readFieldEnd();
+    }
+    $xfer += $input->readStructEnd();
+    return $xfer;
+  }
+
+  public function write($output) {
+    $xfer = 0;
+    $xfer += $output->writeStructBegin('AlreadyExistsError');
+    if ($this->why !== null) {
+      $xfer += $output->writeFieldBegin('why', TType::STRING, 1);
+      $xfer += $output->writeString($this->why);
+      $xfer += $output->writeFieldEnd();
+    }
+    $xfer += $output->writeFieldStop();
+    $xfer += $output->writeStructEnd();
+    return $xfer;
+  }
+
+}
+
+class InputValidationError extends TException {
+  static $_TSPEC;
+
+  public $why = null;
+
+  public function __construct($vals=null) {
+    if (!isset(self::$_TSPEC)) {
+      self::$_TSPEC = array(
+        1 => array(
+          'var' => 'why',
+          'type' => TType::STRING,
+          ),
+        );
+    }
+    if (is_array($vals)) {
+      if (isset($vals['why'])) {
+        $this->why = $vals['why'];
+      }
+    }
+  }
+
+  public function getName() {
+    return 'InputValidationError';
+  }
+
+  public function read($input)
+  {
+    $xfer = 0;
+    $fname = null;
+    $ftype = 0;
+    $fid = 0;
+    $xfer += $input->readStructBegin($fname);
+    while (true)
+    {
+      $xfer += $input->readFieldBegin($fname, $ftype, $fid);
+      if ($ftype == TType::STOP) {
+        break;
+      }
+      switch ($fid)
+      {
+        case 1:
+          if ($ftype == TType::STRING) {
+            $xfer += $input->readString($this->why);
+          } else {
+            $xfer += $input->skip($ftype);
+          }
+          break;
+        default:
+          $xfer += $input->skip($ftype);
+          break;
+      }
+      $xfer += $input->readFieldEnd();
+    }
+    $xfer += $input->readStructEnd();
+    return $xfer;
+  }
+
+  public function write($output) {
+    $xfer = 0;
+    $xfer += $output->writeStructBegin('InputValidationError');
+    if ($this->why !== null) {
+      $xfer += $output->writeFieldBegin('why', TType::STRING, 1);
+      $xfer += $output->writeString($this->why);
+      $xfer += $output->writeFieldEnd();
+    }
+    $xfer += $output->writeFieldStop();
+    $xfer += $output->writeStructEnd();
+    return $xfer;
+  }
+
+}
+
+class InvalidRequest extends TException {
+  static $_TSPEC;
+
+  public $why = null;
+
+  public function __construct($vals=null) {
+    if (!isset(self::$_TSPEC)) {
+      self::$_TSPEC = array(
+        1 => array(
+          'var' => 'why',
+          'type' => TType::STRING,
+          ),
+        );
+    }
+    if (is_array($vals)) {
+      if (isset($vals['why'])) {
+        $this->why = $vals['why'];
+      }
+    }
+  }
+
+  public function getName() {
+    return 'InvalidRequest';
+  }
+
+  public function read($input)
+  {
+    $xfer = 0;
+    $fname = null;
+    $ftype = 0;
+    $fid = 0;
+    $xfer += $input->readStructBegin($fname);
+    while (true)
+    {
+      $xfer += $input->readFieldBegin($fname, $ftype, $fid);
+      if ($ftype == TType::STOP) {
+        break;
+      }
+      switch ($fid)
+      {
+        case 1:
+          if ($ftype == TType::STRING) {
+            $xfer += $input->readString($this->why);
+          } else {
+            $xfer += $input->skip($ftype);
+          }
+          break;
+        default:
+          $xfer += $input->skip($ftype);
+          break;
+      }
+      $xfer += $input->readFieldEnd();
+    }
+    $xfer += $input->readStructEnd();
+    return $xfer;
+  }
+
+  public function write($output) {
+    $xfer = 0;
+    $xfer += $output->writeStructBegin('InvalidRequest');
+    if ($this->why !== null) {
+      $xfer += $output->writeFieldBegin('why', TType::STRING, 1);
+      $xfer += $output->writeString($this->why);
       $xfer += $output->writeFieldEnd();
     }
     $xfer += $output->writeFieldStop();

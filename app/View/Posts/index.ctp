@@ -2,7 +2,19 @@
 <h2>Posts</h2>
 <ul>
 <?php foreach($posts as $post): ?>
-<li>[<?= $post->id ?>] <?= $this->Html->link($post->text, sprintf('/posts/view/%d', $post->id)) ?></li>
+<li>
+    <div>[<?= $post->id ?>] <?= $this->Html->link($post->text, sprintf('/posts/view/%d', $post->id)) ?></div>
+    <div><?php
+        if (isset($post->user->username)) {
+            $username = $post->user->username;
+            echo $this->Html->link($username, sprintf('/users/%s', $username));
+        } else {
+            echo '&lt;unknown user&gt;';
+        }
+        ?>
+    </div>
+    <?php pr($post); ?>
+</li>
 <?php endforeach; ?>
 </ul>
 </div>

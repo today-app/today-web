@@ -8,6 +8,8 @@ App::uses('AppAuthController', 'Controller');
  */
 class UsersController extends AppAuthController {
 
+    public $uses = array('User', 'TodayApi');
+
     public function beforeFilter() {
         parent::beforeFilter();
         // Allow users to register and logout.
@@ -85,6 +87,13 @@ class UsersController extends AppAuthController {
         }
         $this->Session->setFlash(__('User was not deleted'));
         return $this->redirect(array('action' => 'index'));
+    }
+
+    public function timeline() {
+        $username = $this->request->params['pass'][0];
+        $user = $this->TodayApi->users_get_by_username($username);
+        $posts = $this->TodayApi->timeline_list($user->id);
+        $this->set(compact('posts', 'user'));
     }
 
 }

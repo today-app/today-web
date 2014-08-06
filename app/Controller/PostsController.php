@@ -16,7 +16,7 @@ class PostsController extends AppAuthController {
     public function add() {
         if (!empty($this->request->data)) {
             $text = $this->request->data['Post']['text'];
-            $result = $this->TodayApi->post_create(1, $text);
+            $result = $this->TodayApi->post_create($this->currentUserId, $text);
             if ($result) {
                 $this->Session->setFlash('Created');
                 $this->redirect(array('action' => 'index'));
@@ -33,18 +33,17 @@ class PostsController extends AppAuthController {
         }
 
         $post = $this->TodayApi->post_get(1, $post_id);
-        $comments = $this->TodayApi->post_comment_list(1, $post_id);
+        $comments = $this->TodayApi->post_comment_list($this->currentUserId, $post_id);
         $this->set('post', $post);
         $this->set('comments', $comments);
     }
 
     public function comment_add() {
         if (!empty($this->request->data)) {
-//            pr($this->request->data); exit;
             $post_id = $this->request->data['Comment']['post_id'];
             $text = $this->request->data['Comment']['text'];
 
-            $result = $this->TodayApi->post_comment_create(1, $post_id, $text);
+            $result = $this->TodayApi->post_comment_create($this->currentUserId, $post_id, $text);
             if ($result) {
                 $this->Session->setFlash('Comment added.');
                 $this->redirect(array('action' => 'view', $post_id));
@@ -53,6 +52,24 @@ class PostsController extends AppAuthController {
             }
         }
     }
+
+    public function isAuthorized($user) {
+        // All registered users can add posts
+        if (in_array($this->action, array('add', 'comment_add')))  {
+            return true;
+        }
+
+        // The owner of a post can edit and delete it
+//        if (in_array($this->action, array('edit', 'delete'))) {
+//            $postId = (int) $this->request->params['pass'][0];
+//            if ($this->Post->isOwnedBy($postId, $user['id'])) {
+//                return true;
+//            }
+//        }
+
+        return parent::isAuthorized($user);
+    }
+
 
 }
 

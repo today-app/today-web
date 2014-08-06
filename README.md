@@ -1,9 +1,19 @@
-letter-dev / front
+today-web
 ==================
 
-## social login
+URL:
 
-- Twitter: <http://localhost/front/auth/twitter>
-- Google: <http://localhost/front/auth/google>
-- Facebook: <http://localhost/front/auth/facebook>
+- /users/login
+- /users/logout
+
+- /post/add
+- /post/view/<post_id>
+- /post/remove
+- /post/comment_add
+
+
+- /users/<username> timeline of <username>
+- /home/posts home_timeline of current login user
+- /home/notifications
+- /home/settings
 
