@@ -43,15 +43,23 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 			<h1><?php echo $this->Html->link($cakeDescription, 'http://cakephp.org'); ?></h1>
 		</div>
 <div style="background-color: #ccc; padding: 0.5em;">
-<?php echo $this->Html->link('Posts', '/posts/index') ?> |
+<?php
+$menu_items = array(
+    $this->Html->link('Home', '/home'),
+    $this->Html->link('Posts', '/posts/index'),
+);
+
+echo join(' | ', $menu_items);
+?> |
 <?
     if (!$this->Session->check('Auth.User.id')) {
         echo $this->Html->link('Login', '/users/login');
     } else {
         $user_name = $this->Session->read('Auth.User.username');
 
+        echo 'user: ';
         echo $this->Html->link($user_name, '/users/' . $user_name);
-        echo ' ';
+        echo ' | ';
         echo $this->Html->link('Logout', '/users/logout');
     }
 

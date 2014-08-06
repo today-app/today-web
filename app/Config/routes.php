@@ -31,8 +31,8 @@
  */
 	Router::connect('/pages/*', array('controller' => 'pages', 'action' => 'display'));
 
-    foreach (array('index', 'login', 'logout', 'add') as $action) {
-        Router::connect("/users/$action", array('controller' => 'users', 'action' => $action));
+    foreach (array('index', 'login', 'logout', 'add', 'request', 'accept', 'reject', 'remove', 'cancel', ) as $action) {
+        Router::connect("/users/$action/*", array('controller' => 'users', 'action' => $action));
     }
     Router::connect("/users/*", array('controller' => 'users', 'action' => 'timeline'));
 
