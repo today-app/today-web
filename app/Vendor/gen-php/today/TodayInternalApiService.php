@@ -34,7 +34,8 @@ interface TodayInternalApiServiceIf {
   public function friendship_reject($actor_id, $target_id);
   public function users_get($user_id);
   public function users_get_by_username($username);
-  public function timeline_list($actor_id);
+  public function timeline_home($actor_id);
+  public function timeline_user($actor_id);
   public function system_reset_fixtures();
 }
 
@@ -956,34 +957,34 @@ class TodayInternalApiServiceClient implements \today\TodayInternalApiServiceIf 
     throw new \Exception("users_get_by_username failed: unknown result");
   }
 
-  public function timeline_list($actor_id)
+  public function timeline_home($actor_id)
   {
-    $this->send_timeline_list($actor_id);
-    return $this->recv_timeline_list();
+    $this->send_timeline_home($actor_id);
+    return $this->recv_timeline_home();
   }
 
-  public function send_timeline_list($actor_id)
+  public function send_timeline_home($actor_id)
   {
-    $args = new \today\TodayInternalApiService_timeline_list_args();
+    $args = new \today\TodayInternalApiService_timeline_home_args();
     $args->actor_id = $actor_id;
     $bin_accel = ($this->output_ instanceof TBinaryProtocolAccelerated) && function_exists('thrift_protocol_write_binary');
     if ($bin_accel)
     {
-      thrift_protocol_write_binary($this->output_, 'timeline_list', TMessageType::CALL, $args, $this->seqid_, $this->output_->isStrictWrite());
+      thrift_protocol_write_binary($this->output_, 'timeline_home', TMessageType::CALL, $args, $this->seqid_, $this->output_->isStrictWrite());
     }
     else
     {
-      $this->output_->writeMessageBegin('timeline_list', TMessageType::CALL, $this->seqid_);
+      $this->output_->writeMessageBegin('timeline_home', TMessageType::CALL, $this->seqid_);
       $args->write($this->output_);
       $this->output_->writeMessageEnd();
       $this->output_->getTransport()->flush();
     }
   }
 
-  public function recv_timeline_list()
+  public function recv_timeline_home()
   {
     $bin_accel = ($this->input_ instanceof TBinaryProtocolAccelerated) && function_exists('thrift_protocol_read_binary');
-    if ($bin_accel) $result = thrift_protocol_read_binary($this->input_, '\today\TodayInternalApiService_timeline_list_result', $this->input_->isStrictRead());
+    if ($bin_accel) $result = thrift_protocol_read_binary($this->input_, '\today\TodayInternalApiService_timeline_home_result', $this->input_->isStrictRead());
     else
     {
       $rseqid = 0;
@@ -997,14 +998,65 @@ class TodayInternalApiServiceClient implements \today\TodayInternalApiServiceIf 
         $this->input_->readMessageEnd();
         throw $x;
       }
-      $result = new \today\TodayInternalApiService_timeline_list_result();
+      $result = new \today\TodayInternalApiService_timeline_home_result();
       $result->read($this->input_);
       $this->input_->readMessageEnd();
     }
     if ($result->success !== null) {
       return $result->success;
     }
-    throw new \Exception("timeline_list failed: unknown result");
+    throw new \Exception("timeline_home failed: unknown result");
+  }
+
+  public function timeline_user($actor_id)
+  {
+    $this->send_timeline_user($actor_id);
+    return $this->recv_timeline_user();
+  }
+
+  public function send_timeline_user($actor_id)
+  {
+    $args = new \today\TodayInternalApiService_timeline_user_args();
+    $args->actor_id = $actor_id;
+    $bin_accel = ($this->output_ instanceof TBinaryProtocolAccelerated) && function_exists('thrift_protocol_write_binary');
+    if ($bin_accel)
+    {
+      thrift_protocol_write_binary($this->output_, 'timeline_user', TMessageType::CALL, $args, $this->seqid_, $this->output_->isStrictWrite());
+    }
+    else
+    {
+      $this->output_->writeMessageBegin('timeline_user', TMessageType::CALL, $this->seqid_);
+      $args->write($this->output_);
+      $this->output_->writeMessageEnd();
+      $this->output_->getTransport()->flush();
+    }
+  }
+
+  public function recv_timeline_user()
+  {
+    $bin_accel = ($this->input_ instanceof TBinaryProtocolAccelerated) && function_exists('thrift_protocol_read_binary');
+    if ($bin_accel) $result = thrift_protocol_read_binary($this->input_, '\today\TodayInternalApiService_timeline_user_result', $this->input_->isStrictRead());
+    else
+    {
+      $rseqid = 0;
+      $fname = null;
+      $mtype = 0;
+
+      $this->input_->readMessageBegin($fname, $mtype, $rseqid);
+      if ($mtype == TMessageType::EXCEPTION) {
+        $x = new TApplicationException();
+        $x->read($this->input_);
+        $this->input_->readMessageEnd();
+        throw $x;
+      }
+      $result = new \today\TodayInternalApiService_timeline_user_result();
+      $result->read($this->input_);
+      $this->input_->readMessageEnd();
+    }
+    if ($result->success !== null) {
+      return $result->success;
+    }
+    throw new \Exception("timeline_user failed: unknown result");
   }
 
   public function system_reset_fixtures()
@@ -4116,7 +4168,7 @@ class TodayInternalApiService_users_get_by_username_result {
 
 }
 
-class TodayInternalApiService_timeline_list_args {
+class TodayInternalApiService_timeline_home_args {
   static $_TSPEC;
 
   public $actor_id = null;
@@ -4138,7 +4190,7 @@ class TodayInternalApiService_timeline_list_args {
   }
 
   public function getName() {
-    return 'TodayInternalApiService_timeline_list_args';
+    return 'TodayInternalApiService_timeline_home_args';
   }
 
   public function read($input)
@@ -4175,7 +4227,7 @@ class TodayInternalApiService_timeline_list_args {
 
   public function write($output) {
     $xfer = 0;
-    $xfer += $output->writeStructBegin('TodayInternalApiService_timeline_list_args');
+    $xfer += $output->writeStructBegin('TodayInternalApiService_timeline_home_args');
     if ($this->actor_id !== null) {
       $xfer += $output->writeFieldBegin('actor_id', TType::I32, 1);
       $xfer += $output->writeI32($this->actor_id);
@@ -4188,7 +4240,7 @@ class TodayInternalApiService_timeline_list_args {
 
 }
 
-class TodayInternalApiService_timeline_list_result {
+class TodayInternalApiService_timeline_home_result {
   static $_TSPEC;
 
   public $success = null;
@@ -4215,7 +4267,7 @@ class TodayInternalApiService_timeline_list_result {
   }
 
   public function getName() {
-    return 'TodayInternalApiService_timeline_list_result';
+    return 'TodayInternalApiService_timeline_home_result';
   }
 
   public function read($input)
@@ -4263,7 +4315,7 @@ class TodayInternalApiService_timeline_list_result {
 
   public function write($output) {
     $xfer = 0;
-    $xfer += $output->writeStructBegin('TodayInternalApiService_timeline_list_result');
+    $xfer += $output->writeStructBegin('TodayInternalApiService_timeline_home_result');
     if ($this->success !== null) {
       if (!is_array($this->success)) {
         throw new TProtocolException('Bad type in structure.', TProtocolException::INVALID_DATA);
@@ -4275,6 +4327,178 @@ class TodayInternalApiService_timeline_list_result {
           foreach ($this->success as $iter41)
           {
             $xfer += $iter41->write($output);
+          }
+        }
+        $output->writeListEnd();
+      }
+      $xfer += $output->writeFieldEnd();
+    }
+    $xfer += $output->writeFieldStop();
+    $xfer += $output->writeStructEnd();
+    return $xfer;
+  }
+
+}
+
+class TodayInternalApiService_timeline_user_args {
+  static $_TSPEC;
+
+  public $actor_id = null;
+
+  public function __construct($vals=null) {
+    if (!isset(self::$_TSPEC)) {
+      self::$_TSPEC = array(
+        1 => array(
+          'var' => 'actor_id',
+          'type' => TType::I32,
+          ),
+        );
+    }
+    if (is_array($vals)) {
+      if (isset($vals['actor_id'])) {
+        $this->actor_id = $vals['actor_id'];
+      }
+    }
+  }
+
+  public function getName() {
+    return 'TodayInternalApiService_timeline_user_args';
+  }
+
+  public function read($input)
+  {
+    $xfer = 0;
+    $fname = null;
+    $ftype = 0;
+    $fid = 0;
+    $xfer += $input->readStructBegin($fname);
+    while (true)
+    {
+      $xfer += $input->readFieldBegin($fname, $ftype, $fid);
+      if ($ftype == TType::STOP) {
+        break;
+      }
+      switch ($fid)
+      {
+        case 1:
+          if ($ftype == TType::I32) {
+            $xfer += $input->readI32($this->actor_id);
+          } else {
+            $xfer += $input->skip($ftype);
+          }
+          break;
+        default:
+          $xfer += $input->skip($ftype);
+          break;
+      }
+      $xfer += $input->readFieldEnd();
+    }
+    $xfer += $input->readStructEnd();
+    return $xfer;
+  }
+
+  public function write($output) {
+    $xfer = 0;
+    $xfer += $output->writeStructBegin('TodayInternalApiService_timeline_user_args');
+    if ($this->actor_id !== null) {
+      $xfer += $output->writeFieldBegin('actor_id', TType::I32, 1);
+      $xfer += $output->writeI32($this->actor_id);
+      $xfer += $output->writeFieldEnd();
+    }
+    $xfer += $output->writeFieldStop();
+    $xfer += $output->writeStructEnd();
+    return $xfer;
+  }
+
+}
+
+class TodayInternalApiService_timeline_user_result {
+  static $_TSPEC;
+
+  public $success = null;
+
+  public function __construct($vals=null) {
+    if (!isset(self::$_TSPEC)) {
+      self::$_TSPEC = array(
+        0 => array(
+          'var' => 'success',
+          'type' => TType::LST,
+          'etype' => TType::STRUCT,
+          'elem' => array(
+            'type' => TType::STRUCT,
+            'class' => '\today\Post',
+            ),
+          ),
+        );
+    }
+    if (is_array($vals)) {
+      if (isset($vals['success'])) {
+        $this->success = $vals['success'];
+      }
+    }
+  }
+
+  public function getName() {
+    return 'TodayInternalApiService_timeline_user_result';
+  }
+
+  public function read($input)
+  {
+    $xfer = 0;
+    $fname = null;
+    $ftype = 0;
+    $fid = 0;
+    $xfer += $input->readStructBegin($fname);
+    while (true)
+    {
+      $xfer += $input->readFieldBegin($fname, $ftype, $fid);
+      if ($ftype == TType::STOP) {
+        break;
+      }
+      switch ($fid)
+      {
+        case 0:
+          if ($ftype == TType::LST) {
+            $this->success = array();
+            $_size42 = 0;
+            $_etype45 = 0;
+            $xfer += $input->readListBegin($_etype45, $_size42);
+            for ($_i46 = 0; $_i46 < $_size42; ++$_i46)
+            {
+              $elem47 = null;
+              $elem47 = new \today\Post();
+              $xfer += $elem47->read($input);
+              $this->success []= $elem47;
+            }
+            $xfer += $input->readListEnd();
+          } else {
+            $xfer += $input->skip($ftype);
+          }
+          break;
+        default:
+          $xfer += $input->skip($ftype);
+          break;
+      }
+      $xfer += $input->readFieldEnd();
+    }
+    $xfer += $input->readStructEnd();
+    return $xfer;
+  }
+
+  public function write($output) {
+    $xfer = 0;
+    $xfer += $output->writeStructBegin('TodayInternalApiService_timeline_user_result');
+    if ($this->success !== null) {
+      if (!is_array($this->success)) {
+        throw new TProtocolException('Bad type in structure.', TProtocolException::INVALID_DATA);
+      }
+      $xfer += $output->writeFieldBegin('success', TType::LST, 0);
+      {
+        $output->writeListBegin(TType::STRUCT, count($this->success));
+        {
+          foreach ($this->success as $iter48)
+          {
+            $xfer += $iter48->write($output);
           }
         }
         $output->writeListEnd();

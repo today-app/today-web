@@ -13,7 +13,7 @@ class UsersController extends AppAuthController {
     public function beforeFilter() {
         parent::beforeFilter();
         // Allow users to register and logout.
-        $this->Auth->allow('add', 'logout');
+        $this->Auth->allow('add', 'logout', 'timeline');
     }
 
     public function login() {
@@ -92,8 +92,11 @@ class UsersController extends AppAuthController {
     public function timeline() {
         $username = $this->request->params['pass'][0];
         $user = $this->TodayApi->users_get_by_username($username);
-        $posts = $this->TodayApi->timeline_list($user->id);
+        $posts = $this->TodayApi->timeline_user($user->id);
         $this->set(compact('posts', 'user'));
     }
 
+    public function isAuthorized($user) {
+        return true;
+    }
 }
