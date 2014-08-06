@@ -44,10 +44,11 @@ $cakeDescription = __d('cake_dev', 'CakePHP: the rapid development php framework
 		</div>
 <div style="background-color: #ccc; padding: 0.5em;">
 <?php
-$menu_items = array(
-    $this->Html->link('Home', '/home'),
-    $this->Html->link('Posts', '/posts/index'),
-);
+$menu_items = array();
+if ($this->Session->check('Auth.User.id')) {
+    $menu_items[] = $this->Html->link('Home', '/home');
+}
+$menu_items[] = $this->Html->link('Posts', '/posts/index');
 
 echo join(' | ', $menu_items);
 ?> |

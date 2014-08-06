@@ -12,3 +12,8 @@
     <?php echo $this->Form->end(__('Login')); ?>
 </div>
 
+<div class="actions">
+<ul>
+<li><?php echo $this->Html->link('Join', '/users/add'); ?></li>
+</ul>
+</div>
